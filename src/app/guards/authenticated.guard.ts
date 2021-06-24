@@ -31,6 +31,9 @@ export class AuthenticatedGuard
         if (!isAuth) {
           this.router.navigate(['/not-auth']);
         }
+        else {
+          this.router.navigate(['/pokemons']);
+        }
       })
     );
   }
