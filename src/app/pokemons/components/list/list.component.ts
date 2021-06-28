@@ -3,15 +3,16 @@ import {FormControl} from '@angular/forms';
 import type {PaginatorState} from '../../../components/paginator/paginator.component';
 import {BackendService} from "../../../services/backend.service";
 import {Pokemon} from "../../../models/pokemon";
+import {PaginatorService} from "../../../services/paginator.service";
 
 @Component({
     selector: 'pokemon-list',
     template: `
         <paginator
-                [currentPage]="1"
+                [currentPage]="this.currentPage"
                 [rowsPerPageOptions]="[10, 20, 40, 80]"
                 [rows]="20"
-                [totalRecords]="100"
+                [totalRecords]="count"
                 (onPageChange)="onPageChanged($event)"
         ></paginator>
         <input
@@ -27,21 +28,34 @@ import {Pokemon} from "../../../models/pokemon";
 export class ListComponent implements OnInit {
     data : Pokemon [];
     query = new FormControl('');
-    onPageChanged(paginatorState: PaginatorState) {
-        console.log(paginatorState);
-    }
+    dataPaginator: any;
+    count: number;
+    currentPage: number;
 
-    constructor(private backendService: BackendService) {
+    constructor(private backendService: BackendService,
+                private paginatorService: PaginatorService) {
     }
 
     ngOnInit() {
-        this.getDataTable()
+        this.getDataTable(20, 0);
+        this.currentPage = 1;
+        this.paginatorService.paginator.subscribe((offset:any) => {
+            this.getDataTable(20, offset)
+        })
     }
 
-    getDataTable() {
-        this.backendService.getPokemons(40, 0).subscribe((res: any) => {
+    onPageChanged(paginatorState: PaginatorState) {
+        console.log(paginatorState);
+        this.currentPage = paginatorState.page;
+        let offset = paginatorState.first - 20;
+        this.paginatorService.paginator.next(offset)
+    }
+
+    getDataTable(limit: number, offset: number) {
+        this.backendService.getPokemons(limit, offset).subscribe((res: any) => {
             this.data = res.results;
-            console.log(res)
+            this.dataPaginator = res;
+            this.count = res.count;
         })
     }
 }
