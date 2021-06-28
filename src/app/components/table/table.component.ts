@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Pokemon } from '../../models/pokemon';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {PaginatedPokemon, Pokemon} from '../../models/pokemon';
+import {BackendService} from "../../services/backend.service";
 
 @Component({
   selector: 'data-table',
   template: `
-    <table [class.overlay]="isLoading">
+    <table [class.overlay]="isLoading" *ngIf="data">
       <thead>
         <tr>
           <th class="border-bottom">Name</th>
@@ -69,7 +70,12 @@ import { Pokemon } from '../../models/pokemon';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableComponent {
+export class TableComponent implements OnInit{
   @Input() isLoading = false;
-  @Input() data: Pokemon[] = [];
+  @Input() data: Pokemon[];
+
+  ngOnInit() {
+    console.log(this.data)
+  }
+
 }

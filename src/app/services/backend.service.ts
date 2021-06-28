@@ -10,7 +10,7 @@ export class BackendService {
 
   constructor(private readonly httpClient: HttpClient) {}
 
-  getPokemons(limit = 20, offset = 0): Observable<PaginatedPokemon> {
+  getPokemons(limit = 20, offset = 20): Observable<PaginatedPokemon> {
     return this.httpClient
       .get<PaginatedPokemon>(this.baseUrl, {
         params: { limit, offset }
@@ -36,7 +36,7 @@ export class BackendService {
     return this.httpClient
       .get<SimplifiedPokemon>(`${this.baseUrl}/${id}`)
       .pipe(
-        delay(1500), 
+        delay(1500),
         map((pokemon: PokemonDetail) => BackendService.getSimplifiedPokemon(pokemon))
       );
   }

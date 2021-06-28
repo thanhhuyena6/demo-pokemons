@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnInit, VERSION} from '@angular/core';
 import { User } from '../../models/user';
 import {AuthService} from "../../services/auth.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'navbar',
@@ -51,30 +52,34 @@ export class NavbarComponent implements OnInit{
   version = VERSION.full;
   user: User = {};
   isLoggedIn = false;
-  Info: any;
 
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService,
+              private router: Router) {
   }
 
   ngOnInit() {
-
+    this.isLoggedIn = JSON.parse(localStorage.getItem("token"));
+    this.user = JSON.parse(localStorage.getItem("token"));
   }
 
 
   logIn() {
     // TODO: Please replace with a service call
-    this.isLoggedIn = true;
     this.authService.login().subscribe((res:any) => {
-      this.user = res;
+      this.user = res
       localStorage.setItem('token',JSON.stringify(this.user))
     })
+    this.router.navigate(["/pokemons"]);
+    this.isLoggedIn = true;
 
   }
 
   logOut() {
     // TODO: Please replace with a service call
+    this.authService.login();
+    localStorage.removeItem('token')
+    this.router.navigate(["/not-auth"]);
     this.isLoggedIn = false;
-    console.log(this.user)
   }
 }
