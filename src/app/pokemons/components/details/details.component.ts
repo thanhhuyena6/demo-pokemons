@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, HostBinding, OnInit} from '@angular/core';
 import {BackendService} from "../../../services/backend.service";
-import {DetailsService} from "../../../services/details.service";
+import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 
 @Component({
   selector: 'pokemon-details',
@@ -9,7 +9,7 @@ import {DetailsService} from "../../../services/details.service";
       <button (click)="prevId()">
         <<
       </button>
-      <pokemon-card [pokemon]="null"></pokemon-card>
+      <pokemon-card [pokemon]="dataDetail"></pokemon-card>
       <button (click)="nextId()">
         >>
       </button>
@@ -27,7 +27,6 @@ import {DetailsService} from "../../../services/details.service";
       </button>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
     `
       :host {
@@ -37,32 +36,49 @@ import {DetailsService} from "../../../services/details.service";
   ]
 })
 export class DetailsComponent implements OnInit{
+  dataDetail: any;
+  idCurrent: any;
   @HostBinding('class') hostClass =
     'flex flex-col gap-4 items-center justify-center';
 
   constructor(private backendService: BackendService,
-              private detailsService: DetailsService ) {
+              private router: Router,
+              private route: ActivatedRoute) {
+
   }
 
   ngOnInit() {
-    this.getDataDetail()
+    this.getParamId()
   }
 
-  getDataDetail(){
-    this.detailsService.sendId.subscribe((valueId:any) => {
-      this.backendService.getPokemonDetail(valueId).subscribe((res:any) => {
-        console.log(res)
-      })
+  getParamId(){
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      this.idCurrent = parseInt(params.get('id'));
+      if (this.idCurrent) {
+        this.getDataDetail(this.idCurrent)
+        // console.log(this.router.navigate(['pokemons', this.idCurrent]))
+      }
     })
+  }
 
+  getDataDetail(id) {
+    this.backendService.getPokemonDetail(id).subscribe((res:any) => {
+      this.dataDetail = res;
+    })
   }
 
   nextId() {
     // go to next id
+    this.idCurrent += 1;
+    this.getDataDetail(this.idCurrent);
+    this.router.navigate(['pokemons', this.idCurrent]);
   }
 
   prevId() {
     // go to prev id
+    this.idCurrent -= 1;
+    this.getDataDetail(this.idCurrent);
+    this.router.navigate(['pokemons', this.idCurrent]);
   }
 
   like() {

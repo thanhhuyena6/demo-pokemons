@@ -23,7 +23,6 @@ import {PaginatorService} from "../../../services/paginator.service";
         />
         <data-table [isLoading]="false" [data]="data"></data-table>
     `,
-    // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent implements OnInit {
     data : Pokemon [];

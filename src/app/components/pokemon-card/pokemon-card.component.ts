@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import { SimplifiedPokemon } from '../../models/pokemon';
 
 @Component({
@@ -102,7 +102,7 @@ import { SimplifiedPokemon } from '../../models/pokemon';
     `
   ]
 })
-export class PokemonCardComponent {
+export class PokemonCardComponent{
   @Input() pokemon: SimplifiedPokemon;
 
   pokemonTypeColorMap: Record<

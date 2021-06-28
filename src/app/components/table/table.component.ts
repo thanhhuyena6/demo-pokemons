@@ -1,7 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {PaginatedPokemon, Pokemon} from '../../models/pokemon';
 import {BackendService} from "../../services/backend.service";
-import {DetailsService} from "../../services/details.service";
 
 @Component({
   selector: 'data-table',
@@ -16,7 +15,7 @@ import {DetailsService} from "../../services/details.service";
       <tbody>
         <tr *ngFor="let result of data">
           <td>
-            <a [routerLink]="['/pokemons', result.id]" (click)="sendIdForDetails(result.id)">{{ result.name }}</a>
+            <a [routerLink]="['/pokemons', result.id]">{{ result.name }}</a>
           </td>
           <td class="border-left">
             <a [href]="result.url" target="_blank">{{ result.url }}</a>
@@ -75,14 +74,11 @@ export class TableComponent implements OnInit{
   @Input() isLoading = false;
   @Input() data: Pokemon[];
 
-  constructor(private  detailsService: DetailsService) {
+  constructor() {
   }
 
   ngOnInit() {
   }
 
-  sendIdForDetails(id) {
-    this.detailsService.sendId.next(id);
-  }
 
 }
