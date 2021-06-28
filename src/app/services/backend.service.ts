@@ -37,7 +37,7 @@ export class BackendService {
       .get<SimplifiedPokemon>(`${this.baseUrl}/${id}`)
       .pipe(
         delay(1500),
-        map((pokemon: PokemonDetail) => BackendService.getSimplifiedPokemon(pokemon))
+        map((pokemon: any) => BackendService.getSimplifiedPokemon(pokemon))
       );
   }
 

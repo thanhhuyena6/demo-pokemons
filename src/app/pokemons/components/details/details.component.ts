@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostBinding, OnInit} from '@angular/core';
+import {BackendService} from "../../../services/backend.service";
+import {DetailsService} from "../../../services/details.service";
 
 @Component({
   selector: 'pokemon-details',
@@ -34,9 +36,26 @@ import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
     `
   ]
 })
-export class DetailsComponent {
+export class DetailsComponent implements OnInit{
   @HostBinding('class') hostClass =
     'flex flex-col gap-4 items-center justify-center';
+
+  constructor(private backendService: BackendService,
+              private detailsService: DetailsService ) {
+  }
+
+  ngOnInit() {
+    this.getDataDetail()
+  }
+
+  getDataDetail(){
+    this.detailsService.sendId.subscribe((valueId:any) => {
+      this.backendService.getPokemonDetail(valueId).subscribe((res:any) => {
+        console.log(res)
+      })
+    })
+
+  }
 
   nextId() {
     // go to next id
