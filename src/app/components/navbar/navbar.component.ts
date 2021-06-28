@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, VERSION } from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, VERSION} from '@angular/core';
 import { User } from '../../models/user';
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'navbar',
@@ -46,18 +47,34 @@ import { User } from '../../models/user';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit{
   version = VERSION.full;
-  user: User;
+  user: User = {};
   isLoggedIn = false;
+  Info: any;
+
+
+  constructor(private authService: AuthService) {
+  }
+
+  ngOnInit() {
+
+  }
+
 
   logIn() {
     // TODO: Please replace with a service call
     this.isLoggedIn = true;
+    this.authService.login().subscribe((res:any) => {
+      this.user = res;
+      localStorage.setItem('token',JSON.stringify(this.user))
+    })
+
   }
 
   logOut() {
     // TODO: Please replace with a service call
     this.isLoggedIn = false;
+    console.log(this.user)
   }
 }
