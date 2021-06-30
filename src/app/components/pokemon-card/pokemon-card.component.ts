@@ -85,7 +85,6 @@ import { SimplifiedPokemon } from '../../models/pokemon';
       </div>
     </ng-template>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
     `
       .max-h-120 {

@@ -68,7 +68,6 @@ import {BackendService} from "../../services/backend.service";
       }
     `
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableComponent implements OnInit{
   @Input() isLoading = false;

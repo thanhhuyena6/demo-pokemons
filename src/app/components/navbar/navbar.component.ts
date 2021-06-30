@@ -9,8 +9,8 @@ import {Router} from "@angular/router";
     <nav>
       <h4>Pokemon v{{ version }}</h4>
       <button *ngIf="isLoggedIn; else notLoggedIn" (click)="logOut()">
-        I am {{ user?.name }}, and I like {{ user?.likes }} and dislike
-        {{ user?.dislikes }} pokemons / Log Out
+        I am {{ user.name }}, and I like {{ user.likes }} and dislike
+        {{ user.dislikes }} pokemons / Log Out
       </button>
       <ng-template #notLoggedIn>
         <button (click)="logIn()">Log In</button>
@@ -46,7 +46,6 @@ import {Router} from "@angular/router";
       }
     `
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarComponent implements OnInit{
   version = VERSION.full;
@@ -60,25 +59,36 @@ export class NavbarComponent implements OnInit{
 
   ngOnInit() {
     this.isLoggedIn = JSON.parse(localStorage.getItem("token"));
-    this.user = JSON.parse(localStorage.getItem("token"));
+    this.getUser();
+  }
+
+  getUser(){
+    this.authService.userState.subscribe((value:User) => {
+     if(value === null) {
+       this.user = {name: 'Lionel', likes: 0, dislikes: 0}
+     } else {
+       this.user = value;
+     }
+    })
   }
 
 
   logIn() {
     // TODO: Please replace with a service call
     this.authService.login().subscribe((res:any) => {
-      this.user = res
-      localStorage.setItem('token',JSON.stringify(this.user))
+      localStorage.setItem('token',JSON.stringify(true))
     })
     this.router.navigate(["/pokemons"]);
     this.isLoggedIn = true;
-
   }
+
+
 
   logOut() {
     // TODO: Please replace with a service call
     this.authService.login();
     localStorage.removeItem('token')
+    localStorage.removeItem('user')
     this.router.navigate(["/not-auth"]);
     this.isLoggedIn = false;
   }
