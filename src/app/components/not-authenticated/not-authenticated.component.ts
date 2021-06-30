@@ -5,7 +5,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   template: `
     <h1>Please Log In</h1>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [
     `
       :host {

@@ -1,6 +1,8 @@
 import {ChangeDetectionStrategy, Component, HostBinding, OnInit} from '@angular/core';
 import {BackendService} from "../../../services/backend.service";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
+import {User} from "../../../models/user";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'pokemon-details',
@@ -38,17 +40,20 @@ import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 export class DetailsComponent implements OnInit{
   dataDetail: any;
   idCurrent: any;
+  user: User = {};
+  value: number = 1;
   @HostBinding('class') hostClass =
     'flex flex-col gap-4 items-center justify-center';
 
   constructor(private backendService: BackendService,
+              private authService: AuthService,
               private router: Router,
               private route: ActivatedRoute) {
 
   }
 
   ngOnInit() {
-    this.getParamId()
+    this.getParamId();
   }
 
   getParamId(){
@@ -56,7 +61,6 @@ export class DetailsComponent implements OnInit{
       this.idCurrent = parseInt(params.get('id'));
       if (this.idCurrent) {
         this.getDataDetail(this.idCurrent)
-        // console.log(this.router.navigate(['pokemons', this.idCurrent]))
       }
     })
   }
@@ -69,23 +73,30 @@ export class DetailsComponent implements OnInit{
 
   nextId() {
     // go to next id
-    this.idCurrent += 1;
-    this.getDataDetail(this.idCurrent);
-    this.router.navigate(['pokemons', this.idCurrent]);
+    if (this.idCurrent < 10220) {
+      this.idCurrent += 1;
+      this.getDataDetail(this.idCurrent);
+      this.router.navigate(['pokemons', this.idCurrent]);
+    }
   }
 
   prevId() {
     // go to prev id
-    this.idCurrent -= 1;
-    this.getDataDetail(this.idCurrent);
-    this.router.navigate(['pokemons', this.idCurrent]);
+    if (this.idCurrent > 1) {
+      this.idCurrent -= 1;
+      this.getDataDetail(this.idCurrent);
+      this.router.navigate(['pokemons', this.idCurrent]);
+    }
   }
 
   like() {
     // like
+    this.authService.addLikes(this.value);
+
   }
 
   dislike() {
     // dislike
+    this.authService.addDislikes(this.value);
   }
 }

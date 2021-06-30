@@ -92,7 +92,6 @@ export interface PaginatorState {
       </select>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PaginatorComponent implements OnInit, OnChanges {
   @Input() currentPage = 1;
