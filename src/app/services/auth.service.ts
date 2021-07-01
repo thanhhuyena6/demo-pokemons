@@ -10,20 +10,31 @@ import {any} from "codelyzer/util/function";
 })
 export class AuthService {
     user: User = {name: 'Lionel', likes: 0, dislikes: 0};
-    public _userSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('user')))
+    userInLocalStorage = JSON.parse(localStorage.getItem('user'));
+    public _userSubject = new BehaviorSubject<any>(this.userInLocalStorage)
     userState = this._userSubject.asObservable();
     constructor() {
     }
 
     addLikes(value) {
-        this.user.likes += value;
-        this._userSubject.next(this.user)
+        if (this.userInLocalStorage === null) {
+            this.user.likes += value;
+            this._userSubject.next(this.user)
+        } else {
+            this.user = this.userInLocalStorage;
+            this.user.likes += value;
+        }
         localStorage.setItem('user', JSON.stringify(this.user))
     }
 
     addDislikes(value){
-        this.user.dislikes += value;
-        this._userSubject.next(this.user)
+        if (this.userInLocalStorage === null) {
+            this.user.dislikes += value;
+            this._userSubject.next(this.user)
+        } else {
+            this.user = this.userInLocalStorage;
+            this.user.dislikes += value;
+        }
         localStorage.setItem('user', JSON.stringify(this.user))
     }
 
