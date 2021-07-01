@@ -88,7 +88,7 @@ export class NavbarComponent implements OnInit{
     // TODO: Please replace with a service call
     this.authService.login();
     localStorage.removeItem('token')
-    localStorage.removeItem('user')
+    localStorage.removeItem('user');
     this.router.navigate(["/not-auth"]);
     this.isLoggedIn = false;
   }
