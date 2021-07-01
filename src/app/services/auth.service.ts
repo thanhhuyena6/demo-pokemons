@@ -19,22 +19,22 @@ export class AuthService {
     addLikes(value) {
         if (this.userInLocalStorage === null) {
             this.user.likes += value;
-            this._userSubject.next(this.user)
         } else {
             this.user = this.userInLocalStorage;
             this.user.likes += value;
         }
+        this._userSubject.next(this.user)
         localStorage.setItem('user', JSON.stringify(this.user))
     }
 
     addDislikes(value){
         if (this.userInLocalStorage === null) {
             this.user.dislikes += value;
-            this._userSubject.next(this.user)
         } else {
             this.user = this.userInLocalStorage;
             this.user.dislikes += value;
         }
+        this._userSubject.next(this.user)
         localStorage.setItem('user', JSON.stringify(this.user))
     }
 
